@@ -137,6 +137,7 @@ int request_table_ver_and_size(ryzen_access ry)
 	case FAM_LUCIENNE:
 	case FAM_CEZANNE:
 	case FAM_REMBRANDT:
+	case FAM_PHOENIX:
 		get_table_ver_msg = 0x6;
 		break;
 	default:
@@ -171,6 +172,7 @@ int request_table_ver_and_size(ryzen_access ry)
 	case 0x400005: ry->table_size = 0x944; break;
 	case 0x450004: ry->table_size = 0xA44; break;
 	case 0x450005: ry->table_size = 0xA44; break;
+	case 0x4C0006: ry->table_size = 0xAA0; break;
 		default:
 			//use a larger size then the largest known table to be able to test real table size of unknown tables
 			ry->table_size = 0xA00;
@@ -203,6 +205,7 @@ int request_table_addr(ryzen_access ry)
 	case FAM_LUCIENNE:
 	case FAM_CEZANNE:
 	case FAM_REMBRANDT:
+	case FAM_PHOENIX:
 		get_table_addr_msg = 0x66;
 		break;
 	default:
@@ -212,9 +215,13 @@ int request_table_addr(ryzen_access ry)
 
 	resp = smu_service_req(ry->psmu, get_table_addr_msg, &args);
 
-	if (ry->family == FAM_REMBRANDT) {
+	switch (ry->family)
+	{
+	case FAM_REMBRANDT:
+	case FAM_PHOENIX:
 		ry->table_addr = (uint64_t) args.arg1 << 32 | args.arg0;
-	} else {
+		break;
+	default:
 		ry->table_addr = args.arg0;
 	}
 
@@ -245,6 +252,7 @@ int request_transfer_table(ryzen_access ry)
 	case FAM_LUCIENNE:
 	case FAM_CEZANNE:
 	case FAM_REMBRANDT:
+	case FAM_PHOENIX:
 		transfer_table_msg = 0x65;
 		break;
 	default:
@@ -430,7 +438,7 @@ EXP int CALL set_stapm_limit(ryzen_access ry, uint32_t value){
 	case FAM_VANGOGH:
 	case FAM_REMBRANDT:
 	case FAM_MENDOCINO:
-	case FAM_PHEONIX:
+	case FAM_PHOENIX:
 		_do_adjust(0x14);
         if (err) {
             printf("%s: Retry with PSMU\n", __func__);
@@ -456,7 +464,7 @@ EXP int CALL set_fast_limit(ryzen_access ry, uint32_t value){
 	case FAM_VANGOGH:
 	case FAM_REMBRANDT:
 	case FAM_MENDOCINO:
-	case FAM_PHEONIX:
+	case FAM_PHOENIX:
 		_do_adjust(0x15);
 	}
 	return err;
@@ -478,7 +486,7 @@ EXP int CALL set_slow_limit(ryzen_access ry, uint32_t value){
 	case FAM_VANGOGH:
 	case FAM_REMBRANDT:
 	case FAM_MENDOCINO:
-	case FAM_PHEONIX:
+	case FAM_PHOENIX:
 		_do_adjust(0x16);
 	}
 	return err;
@@ -500,7 +508,7 @@ EXP int CALL set_slow_time(ryzen_access ry, uint32_t value){
 	case FAM_VANGOGH:
 	case FAM_REMBRANDT:
 	case FAM_MENDOCINO:
-	case FAM_PHEONIX:
+	case FAM_PHOENIX:
 		_do_adjust(0x17);
 	}
 	return err;
@@ -522,7 +530,7 @@ EXP int CALL set_stapm_time(ryzen_access ry, uint32_t value){
 	case FAM_VANGOGH:
 	case FAM_REMBRANDT:
 	case FAM_MENDOCINO:
-	case FAM_PHEONIX:
+	case FAM_PHOENIX:
 		_do_adjust(0x18);
 	}
 	return err;
@@ -544,7 +552,7 @@ EXP int CALL set_tctl_temp(ryzen_access ry, uint32_t value){
 	case FAM_VANGOGH:
 	case FAM_REMBRANDT:
 	case FAM_MENDOCINO:
-	case FAM_PHEONIX:
+	case FAM_PHOENIX:
 		_do_adjust(0x19);
 	}
 	return err;
@@ -566,7 +574,7 @@ EXP int CALL set_vrm_current(ryzen_access ry, uint32_t value){
 	case FAM_VANGOGH:
 	case FAM_REMBRANDT:
 	case FAM_MENDOCINO:
-	case FAM_PHEONIX:
+	case FAM_PHOENIX:
 		_do_adjust(0x1a);
 	}
 	return err;
@@ -588,7 +596,7 @@ EXP int CALL set_vrmsoc_current(ryzen_access ry, uint32_t value){
 	case FAM_VANGOGH:
 	case FAM_REMBRANDT:
 	case FAM_MENDOCINO:
-	case FAM_PHEONIX:
+	case FAM_PHOENIX:
 		_do_adjust(0x1b);
 	}
 	return err;
@@ -631,7 +639,7 @@ EXP int CALL set_vrmmax_current(ryzen_access ry, uint32_t value){
 	case FAM_CEZANNE:
 	case FAM_REMBRANDT:
 	case FAM_MENDOCINO:
-	case FAM_PHEONIX:
+	case FAM_PHOENIX:
 		_do_adjust(0x1c);
 		break;
 	case FAM_VANGOGH:
@@ -666,7 +674,7 @@ EXP int CALL set_vrmsocmax_current(ryzen_access ry, uint32_t value){
 	case FAM_CEZANNE:
 	case FAM_REMBRANDT:
 	case FAM_MENDOCINO:
-	case FAM_PHEONIX:
+	case FAM_PHOENIX:
 		_do_adjust(0x1d);
 	}
 	return err;
@@ -890,7 +898,7 @@ EXP int CALL set_prochot_deassertion_ramp(ryzen_access ry, uint32_t value) {
 		break;
 	case FAM_REMBRANDT:
 	case FAM_MENDOCINO:
-	case FAM_PHEONIX:
+	case FAM_PHOENIX:
 		_do_adjust(0x1f);
 	}
 	return err;
@@ -910,7 +918,7 @@ EXP int CALL set_apu_skin_temp_limit(ryzen_access ry, uint32_t value) {
 	case FAM_VANGOGH:
 	case FAM_REMBRANDT:
 	case FAM_MENDOCINO:
-	case FAM_PHEONIX:
+	case FAM_PHOENIX:
 		_do_adjust(0x33);
 		break;
 	}
@@ -931,7 +939,7 @@ EXP int CALL set_dgpu_skin_temp_limit(ryzen_access ry, uint32_t value) {
 	case FAM_VANGOGH:
 	case FAM_REMBRANDT:
 	case FAM_MENDOCINO:
-	case FAM_PHEONIX:
+	case FAM_PHOENIX:
 		_do_adjust(0x34);
 		break;
 	}
@@ -949,7 +957,7 @@ EXP int CALL set_apu_slow_limit(ryzen_access ry, uint32_t value) {
 		_do_adjust(0x21);
 		break;
 	case FAM_REMBRANDT:
-	case FAM_PHEONIX:
+	case FAM_PHOENIX:
 		_do_adjust(0x23);
 		break;
 	}
@@ -969,7 +977,7 @@ EXP int CALL set_skin_temp_power_limit(ryzen_access ry, uint32_t value) {
 	case FAM_VANGOGH:
 	case FAM_REMBRANDT:
 	case FAM_MENDOCINO:
-	case FAM_PHEONIX:
+	case FAM_PHOENIX:
 		_do_adjust(0x4a);
 		break;
 	}
@@ -987,7 +995,7 @@ EXP int CALL set_gfx_clk(ryzen_access ry, uint32_t value) {
 	case FAM_VANGOGH:
 	case FAM_REMBRANDT:
 	case FAM_MENDOCINO:
-	case FAM_PHEONIX:
+	case FAM_PHOENIX:
 		_do_adjust_psmu(0x89);
 		break;
 	}
@@ -1011,7 +1019,7 @@ EXP int CALL set_power_saving(ryzen_access ry) {
 	case FAM_VANGOGH:
 	case FAM_REMBRANDT:
 	case FAM_MENDOCINO:
-	case FAM_PHEONIX:
+	case FAM_PHOENIX:
 		_do_adjust(0x12);
 		break;
 	}
@@ -1035,7 +1043,7 @@ EXP int CALL set_max_performance(ryzen_access ry) {
 	case FAM_VANGOGH:
 	case FAM_REMBRANDT:
 	case FAM_MENDOCINO:
-	case FAM_PHEONIX:
+	case FAM_PHOENIX:
 		_do_adjust(0x11);
 		break;
 	}
@@ -1217,6 +1225,7 @@ EXP float CALL get_apu_slow_limit(ryzen_access ry) {
 	case 0x00400005:
 	case 0x00450004:
 	case 0x00450005:
+	case 0x004C0006:
 		_read_float_value(0x18);
 	}
 	return NAN;
@@ -1238,6 +1247,7 @@ EXP float CALL get_apu_slow_value(ryzen_access ry) {
 	case 0x00400005:
 	case 0x00450004:
 	case 0x00450005:
+	case 0x004C0006:
 		_read_float_value(0x1C);
 	}
 	return NAN;
@@ -1266,6 +1276,7 @@ EXP float CALL get_vrm_current(ryzen_access ry) {
 	case 0x00400005:
 	case 0x00450004:
 	case 0x00450005:
+	case 0x004C0006:
 		_read_float_value(0x20);
 	}
 	return NAN;
@@ -1294,6 +1305,7 @@ EXP float CALL get_vrm_current_value(ryzen_access ry) {
 	case 0x00400005:
 	case 0x00450004:
 	case 0x00450005:
+	case 0x004C0006:
 		_read_float_value(0x24);
 	}
 	return NAN;
@@ -1322,6 +1334,7 @@ EXP float CALL get_vrmsoc_current(ryzen_access ry) {
 	case 0x00400005:
 	case 0x00450004:
 	case 0x00450005:
+	case 0x004C0006:
 		_read_float_value(0x28);
 	}
 	return NAN;
@@ -1350,6 +1363,7 @@ EXP float CALL get_vrmsoc_current_value(ryzen_access ry) {
 	case 0x00400005:
 	case 0x00450004:
 	case 0x00450005:
+	case 0x004C0006:
 		_read_float_value(0x2C);
 	}
 	return NAN;
@@ -1491,6 +1505,7 @@ EXP float CALL get_tctl_temp(ryzen_access ry) {
 	case 0x00400005:
 	case 0x00450004:
 	case 0x00450005:
+	case 0x004C0006:
 		_read_float_value(0x40);
 	}
 	return NAN;
@@ -1520,6 +1535,7 @@ EXP float CALL get_tctl_temp_value(ryzen_access ry) {
 	case 0x00400005:
 	case 0x00450004:
 	case 0x00450005:
+	case 0x004C0006:
 		_read_float_value(0x44);
 	}
 	return NAN;
@@ -1541,6 +1557,7 @@ EXP float CALL get_apu_skin_temp_limit(ryzen_access ry) {
 	case 0x00400005:
 	case 0x00450004:
 	case 0x00450005:
+	case 0x004C0006:
 		_read_float_value(0x58);
 	}
 	return NAN;
@@ -1562,6 +1579,7 @@ EXP float CALL get_apu_skin_temp_value(ryzen_access ry) {
 	case 0x00400005:
 	case 0x00450004:
 	case 0x00450005:
+	case 0x004C0006:
 		_read_float_value(0x5C);
 	}
 	return NAN;
@@ -1582,6 +1600,7 @@ EXP float CALL get_dgpu_skin_temp_limit(ryzen_access ry) {
 	case 0x00400005:
 	case 0x00450004:
 	case 0x00450005:
+	case 0x004C0006:
 		_read_float_value(0x60);
 	}
 	return NAN;
@@ -1602,6 +1621,7 @@ EXP float CALL get_dgpu_skin_temp_value(ryzen_access ry) {
 	case 0x00400005:
 	case 0x00450004:
 	case 0x00450005:
+	case 0x004C0006:
 		_read_float_value(0x64);
 	}
 	return NAN;
