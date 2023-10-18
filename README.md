@@ -56,7 +56,7 @@ Settings
     --skin-temp-limit=<u32>               Skin Temperature Power Limit (mW)
     --power-saving                        Hidden options to improve power efficiency (is set when AC unplugged): behavior depends on CPU generation, Device and Manufacture
     --max-performance                     Hidden options to improve performance (is set when AC plugged in): behavior depends on CPU generation, Device and Manufacture
-``` 
+```
 
 ### Demo
 If I'm going to set all the Power Limit to 45W, and Tctl to 90 °C,
@@ -113,11 +113,11 @@ one must have pcilib library & headers available.
 Please make sure that you have libpci dependency before compiling. On
 Debian-based distros this is covered by installing **pcilib-dev** package:
 
-    sudo apt install libpci-dev
+    sudo apt install build-essential cmake libpci-dev
 
 On Fedora:
 
-    sudo dnf install pciutils-devel
+    sudo dnf install cmake gcc-c++ pciutils-devel
 
 If your Distribution is not supported, try finding the packages or use [Distrobox](https://github.com/89luca89/distrobox) or [Toolbox](https://docs.fedoraproject.org/en-US/fedora-silverblue/toolbox/) instead.
 
@@ -129,8 +129,8 @@ The simplest way to build it:
     mkdir build && cd build
     cmake -DCMAKE_BUILD_TYPE=Release ..
     make
-    if [ -d "~/.local/bin" ]; then ln -s ryzenadj ~/.local/bin/ryzenadj && echo "symlinked to ~/.local/bin/ryzenadj"
-    if [ -d "~/.bin" ]; then ln -s ryzenadj ~/.bin/ryzenadj && echo "symlinked to ~/.bin/ryzenadj"
+    if [ -d ~/.local/bin ]; then ln -s ryzenadj ~/.local/bin/ryzenadj && echo "symlinked to ~/.local/bin/ryzenadj"; fi
+    if [ -d ~/.bin ]; then ln -s ryzenadj ~/.bin/ryzenadj && echo "symlinked to ~/.bin/ryzenadj"; fi
 
 ### Windows
 
