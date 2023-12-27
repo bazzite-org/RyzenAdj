@@ -33,12 +33,12 @@ This package contains necessary header files for RyzenAdj Development.
 %cmake_build
 
 %install
-install -Dsm 755 %{_builddir}/RyzenAdj/%__cmake_builddir/ryzenadj %{buildroot}/%{_sbindir}/ryzenadj
+install -Dsm 755 %{_builddir}/RyzenAdj/%__cmake_builddir/ryzenadj %{buildroot}/%{_bindir}/ryzenadj
 install -Dsm 744 %{_builddir}/RyzenAdj/%__cmake_builddir/libryzenadj.so %{buildroot}/%{_libdir}/libryzenadj.so
 install -Dm 744 %{_builddir}/RyzenAdj/lib/ryzenadj.h %{buildroot}/%{_includedir}/ryzenadj.h
 
 %files
-%{_sbindir}/ryzenadj
+%{_bindir}/ryzenadj
 %{_libdir}/libryzenadj.so
 
 %files devel
