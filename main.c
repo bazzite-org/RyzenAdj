@@ -3,6 +3,8 @@
 /* Ryzen NB SMU Service Request Tool */
 
 #include <string.h>
+#include <stdlib.h>
+
 #include "lib/ryzenadj.h"
 #include "argparse.h"
 
@@ -75,7 +77,9 @@ static const char *family_name(enum ryzen_family fam)
 	case FAM_REMBRANDT: return "Rembrandt";
 	case FAM_PHOENIX: return "Phoenix Point";
 	case FAM_HAWKPOINT: return "Hawk Point";
+	case FAM_KRACKANPOINT: return "Krackan Point";
 	case FAM_STRIXPOINT: return "Strix Point";
+	case FAM_STRIXHALO: return "Strix Halo";
 	default:
 		break;
 	}
